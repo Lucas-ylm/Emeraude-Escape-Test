@@ -23,7 +23,7 @@ export default class Corn {
     }
 
     setItem(posX){
-        const geometry = new THREE.PlaneGeometry(.6, .6);
+        const geometry = new THREE.PlaneGeometry(.5, .5);
         
         const material = new THREE.MeshBasicMaterial({color: '#FFFFFF', transparent: true})
 
@@ -38,9 +38,25 @@ export default class Corn {
         mesh.userData.collidedMiddle = false;
         mesh.userData.pointAdded = false;
 
+        const boundingBox = new THREE.Box3().setFromObject(mesh);
+        const center = new THREE.Vector3();
+        boundingBox.getCenter(center);
+        const size = new THREE.Vector3();
+        boundingBox.getSize(size);
+        const scale = new THREE.Vector3(1, 1, 1);
+        size.multiply(scale);
+        const boundary = new OBB(center, size, mesh.rotation);
+        mesh.userData.boundary = boundary;
+
+        const wireframeGeometry = new THREE.WireframeGeometry(geometry);
+        const wireframeMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
+        const wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+        mesh.add(wireframe);
+
         this.chooseAssets(mesh);
 
         this.scene.add(mesh);
+        this.goodItems.push(mesh);
 
     }
 
