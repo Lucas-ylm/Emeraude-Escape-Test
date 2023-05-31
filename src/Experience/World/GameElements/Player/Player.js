@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import gsap from 'gsap';
 import Controller from './Controller';
 
 export default class Player {
@@ -10,14 +11,25 @@ export default class Player {
 
         this.setPlayer();
 
-        this.controller = new Controller({
+        this.controller = new Controller(this);
+    }
 
-        })
+    moveBucket(direction) 
+    {
+        const increment = 0.25;
+        const duration = 0.25;
+    
+        const targetPositionX = direction === 'left' ? `-=${increment}` : `+=${increment}`;
+    
+        gsap.to([this.bucketBackground.position, this.bucketForeground.position], {
+          x: targetPositionX,
+          duration,
+          ease: 'power2.out',
+        });
     }
 
     setPlayer(){
         this.setMesh();
-
     }
 
     setMesh(){
