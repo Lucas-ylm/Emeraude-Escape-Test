@@ -9,9 +9,30 @@ export default class CollisionChecker{
         this.spawner = _options.spawner;
     }
 
-    checkCollision(){
-        
-    }
+    checkCollision() {
+        const playerCollider = this.player.playerCollider;
+        const items = this.spawner.items;
+
+        const playerMatrixWorld = playerCollider.matrixWorld;
+        const playerPosition = new THREE.Vector3();
+        playerPosition.setFromMatrixPosition(playerMatrixWorld);
+    
+        const playerDirection = new THREE.Vector3(0, 0, -1);
+        playerDirection.transformDirection(playerMatrixWorld);
+    
+        this.raycaster.set(playerPosition, playerDirection);
+    
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
+          const intersects = this.raycaster.intersectsObject(item, true);
+    
+          if (intersects.length > 0) {
+            this.addPoint(item);
+            this.spawner.remove(item);
+            i--;
+          }
+        }
+      }
 
     addPoint(item){
         if(item.name == 'good'){
