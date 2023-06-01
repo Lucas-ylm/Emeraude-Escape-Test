@@ -1,9 +1,6 @@
 import * as THREE from 'three';
 import gsap from 'gsap';
 import Controller from './Controller';
-import { Box3Helper, Box3 } from 'three';
-import CollisionChecker from './World/CollisionChecker';
-import { OBB } from 'three/examples/jsm/math/OBB';
 
 
 export default class Player {
@@ -60,45 +57,11 @@ export default class Player {
   }
 
   setColliders() {
-    const topWidth = 1.25;
-    const colliderHeight = 0.2;
-    const colliderDepth = 0.1;
-  
-    const obbSize = new THREE.Vector3(topWidth, colliderHeight, colliderDepth);
-    const obbCenter = new THREE.Vector3(0, -colliderHeight / 2, -colliderDepth / 2);
-  
-    const obbBox = new Box3();
-    obbBox.setFromCenterAndSize(obbCenter, obbSize);
-  
-    this.playerCollider = new Box3Helper(obbBox, 0xff0000); // Display the collider box with red wireframe
-    this.player.add(this.playerCollider);
-  
-    const colliderPosition = (direction) => {
-      obbBox.setFromCenterAndSize(obbCenter, obbSize);
-      obbBox.translate(this.bucketForeground.position);
-  
-      if (direction === 'right') {
-        const offset = 0.75;
-        obbBox.translate(new THREE.Vector3(offset, 0, 0));
-      }
-  
-      this.playerCollider.updateMatrixWorld(true);
-    };
-  
-    const positionBucket = this.moveBucket.bind(this);
-    this.moveBucket = (direction) => {
-      positionBucket(direction);
-      colliderPosition(direction);
-    };
-  
-    colliderPosition();
+    const box = new THREE.Box3().setFromObject(this.bucketForeground);
+    this.player.userData.collider = box;
   }
-
-  updatePlayer(deltaT) {
-    // No physics updates needed for OBB detection
-  }
+  
 
   update(deltaT) {
-    // No updates needed for OBB detection
   }
 }

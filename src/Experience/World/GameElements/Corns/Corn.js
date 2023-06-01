@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OBB } from "three/examples/jsm/math/OBB";
 
 export default class Corn {
     constructor(_options){
@@ -22,14 +21,13 @@ export default class Corn {
         this.badPopCorns = [this.resources.items.popcorn_bad_1, this.resources.items.popcorn_bad_2, this.resources.items.popcorn_bad_3]
     }
 
-    setItem(posX){
-        const geometry = new THREE.PlaneGeometry(.5, .5);
+    setItem(posX) {
+        const geometry = new THREE.PlaneGeometry(0.5, 0.5);
+        const material = new THREE.MeshBasicMaterial({ color: '#FFFFFF', transparent: true });
         
-        const material = new THREE.MeshBasicMaterial({color: '#FFFFFF', transparent: true})
-
-        const mesh = new THREE.Mesh(geometry, material)
-        mesh.position.set(posX,6,0);
-
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(posX, 6, 0);
+        
         mesh.renderOrder = 2;
         mesh.userData.canCollideTop = true;
         mesh.userData.canCollideSide = true;
@@ -37,28 +35,14 @@ export default class Corn {
         mesh.userData.collidedSide = false;
         mesh.userData.collidedMiddle = false;
         mesh.userData.pointAdded = false;
-
-        const boundingBox = new THREE.Box3().setFromObject(mesh);
-        const center = new THREE.Vector3();
-        boundingBox.getCenter(center);
-        const size = new THREE.Vector3();
-        boundingBox.getSize(size);
-        const scale = new THREE.Vector3(1, 1, 1);
-        size.multiply(scale);
-        const boundary = new OBB(center, size, mesh.rotation);
-        mesh.userData.boundary = boundary;
-
-        const wireframeGeometry = new THREE.WireframeGeometry(geometry);
-        const wireframeMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
-        const wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
-        mesh.add(wireframe);
-
+        
         this.chooseAssets(mesh);
-
+        
         this.scene.add(mesh);
         this.goodItems.push(mesh);
-
-    }
+        
+      }
+      
 
     chooseAssets(mesh){
         const randomType = Math.random();
