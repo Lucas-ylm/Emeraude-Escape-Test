@@ -28,7 +28,7 @@ export default class CollisionChecker {
     if (list) {
       list.splice(list.indexOf(item), 1);
     }
-
+  
     if (item.name === "good") {
       this.parameter.score += 1;
     } else if (item.name === "bad") {
@@ -40,11 +40,15 @@ export default class CollisionChecker {
       this.parameter.score += 5 * this.parameter.multiplier;
       this.parameter.multiplier += 1;
     }
-
+  
+    console.log("Current score:", this.parameter.score);
+  
+    const scoreValueElement = document.getElementById("scoreValue");
+    scoreValueElement.innerHTML = this.parameter.score;
+  
     this.event.updateScoreIndicator();
     this.parameter.destroy(item); 
   }
-
   update() {
     this.checkCollision();
   }
